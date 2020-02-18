@@ -161,7 +161,7 @@ class postgresql::server::config {
   }
 
   if $::osfamily == 'RedHat' {
-    if $::operatingsystemrelease =~ /^7/ or $::operatingsystem == 'Fedora' {
+    if $::operatingsystemrelease =~ /^7|^8/ or $::operatingsystem == 'Fedora' {
       file { 'systemd-override':
         ensure  => present,
         path    => "/etc/systemd/system/${service_name}.service",

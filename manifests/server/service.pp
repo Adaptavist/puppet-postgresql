@@ -13,12 +13,18 @@ class postgresql::server::service {
   anchor { 'postgresql::server::service::begin': }
 
   if $service_manage {
+    # work around issues with service provider on CentOS/RHEL 8
+    if ( !$service_provider and $::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' and $::operatingsystemmajrelease == '8') {
+      $real_service_provider = 'systemd' 
+    } else {
+      $real_service_provider = $service_provider 
+    }
 
     service { 'postgresqld':
       ensure    => $service_ensure,
       enable    => $service_enable,
       name      => $service_name,
-      provider  => $service_provider,
+      provider  => $real_service_provider,
       hasstatus => true,
       status    => $service_status,
     }
